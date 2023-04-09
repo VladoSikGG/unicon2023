@@ -11,8 +11,6 @@ public class Movement : MonoBehaviour
     [SerializeField] private float _jumpCooldown;
     [SerializeField] private float _airMultiplier;
     private bool _readyToJump;
-    private float _walkSpeed;
-    private float _sprintSpeed;
 
     [Header("Keybinds")]
     public KeyCode _jumpKey = KeyCode.Space;
@@ -33,7 +31,7 @@ public class Movement : MonoBehaviour
 
     private void Start()
     {
-        _rigidBody = this.GetComponent<Rigidbody>();
+        _rigidBody = GetComponent<Rigidbody>();
         _rigidBody.freezeRotation = true;
 
         _readyToJump = true;
@@ -41,7 +39,6 @@ public class Movement : MonoBehaviour
 
     private void OnCollisionStay(Collision collision)
     {
-        Debug.Log(collision.gameObject.layer);
         if (collision.gameObject.layer == 9)
         {
             _grounded = true;
@@ -58,7 +55,6 @@ public class Movement : MonoBehaviour
     {
 
         MyInput();
-        SpeedControl();
 
         // handle drag
         if (_grounded)
@@ -95,18 +91,23 @@ public class Movement : MonoBehaviour
     {
         // calculate movement direction
         _moveDirection = _orientationInWorld.forward * _verticalInput + _orientationInWorld.right * _horizontalInput;
+
         float currentSpped = _moveSpeed;
-      
-        /* //boost think how make that
-        if (Input.GetKeyDown(KeyCode.Z))
+        //boost think how make that
+        if (Input.GetKey(KeyCode.LeftShift))
         {
+            Debug.Log("Boost");
             currentSpped = _runSpeed;
         }
-        if (Input.GetKeyUp(KeyCode.Z))
+        else if (Input.GetKeyUp(KeyCode.LeftShift))
         {
+            Debug.Log("NotBoost");
             currentSpped = _moveSpeed;
         }
-*/
+
+        SpeedControl(currentSpped);
+        Debug.Log(currentSpped);
+        
         // on ground
         if (_grounded)
         {
@@ -119,12 +120,12 @@ public class Movement : MonoBehaviour
         }
     }
 
-    private void SpeedControl()
+    private void SpeedControl(float currentLimit)
     {
         Vector3 flatVel = new Vector3(_rigidBody.velocity.x, 0f, _rigidBody.velocity.z);
 
         // limit velocity if needed
-        if (flatVel.magnitude > _moveSpeed)
+        if (flatVel.magnitude > currentLimit)
         {
             Vector3 limitedVel = flatVel.normalized * _moveSpeed;
             _rigidBody.velocity = new Vector3(limitedVel.x, _rigidBody.velocity.y, limitedVel.z);
