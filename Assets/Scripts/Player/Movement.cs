@@ -9,7 +9,6 @@ public class Movement : MonoBehaviour
     [SerializeField] private float _groundDrag;
     [SerializeField] private float _jumpForce;
     [SerializeField] private float _jumpCooldown;
-    [SerializeField] private float _airMultiplier;
     private bool _readyToJump;
 
     [Header("Keybinds")]
@@ -74,8 +73,12 @@ public class Movement : MonoBehaviour
 
     private void MyInput()
     {
-        _horizontalInput = Input.GetAxisRaw("Horizontal");
-        _verticalInput = Input.GetAxisRaw("Vertical");
+        if (_grounded)
+        {
+            _horizontalInput = Input.GetAxisRaw("Horizontal");
+            _verticalInput = Input.GetAxisRaw("Vertical");
+        }
+        
 
         // when to jump
         if (Input.GetKey(_jumpKey) && _readyToJump && _grounded)
@@ -112,11 +115,6 @@ public class Movement : MonoBehaviour
         if (_grounded)
         {
             _rigidBody.AddForce(_moveDirection.normalized * currentSpped * 10f, ForceMode.Force);
-        }
-        // in air
-        else
-        {
-            _rigidBody.AddForce(_moveDirection.normalized * currentSpped * 10f * _airMultiplier, ForceMode.Force);
         }
     }
 
