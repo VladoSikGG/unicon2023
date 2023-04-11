@@ -55,7 +55,7 @@ public class Movement : MonoBehaviour
 
         MyInput();
 
-        // handle drag
+       // handle drag
         if (_grounded)
         {
             _rigidBody.drag = _groundDrag;
@@ -108,25 +108,11 @@ public class Movement : MonoBehaviour
             currentSpped = _moveSpeed;
         }
 
-        SpeedControl(currentSpped);
-        Debug.Log(currentSpped);
-        
         // on ground
+        Vector3 moveDirection = transform.TransformDirection(_moveDirection) * currentSpped;
         if (_grounded)
         {
-            _rigidBody.AddForce(_moveDirection.normalized * currentSpped * 10f, ForceMode.Force);
-        }
-    }
-
-    private void SpeedControl(float currentLimit)
-    {
-        Vector3 flatVel = new Vector3(_rigidBody.velocity.x, 0f, _rigidBody.velocity.z);
-
-        // limit velocity if needed
-        if (flatVel.magnitude > currentLimit)
-        {
-            Vector3 limitedVel = flatVel.normalized * _moveSpeed;
-            _rigidBody.velocity = new Vector3(limitedVel.x, _rigidBody.velocity.y, limitedVel.z);
+            _rigidBody.velocity = new Vector3(moveDirection.x, _rigidBody.velocity.y, moveDirection.z);
         }
     }
 
