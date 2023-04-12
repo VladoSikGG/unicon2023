@@ -2,7 +2,10 @@ fileFormatVersion: 2
 guid: 67f994158afa64334b1c0194d7b88705
 ModelImporter:
   serializedVersion: 21202
-  internalIDToNameTable: []
+  internalIDToNameTable:
+  - first:
+      74: 7605569213933317872
+    second: Bolt|BoltAction
   externalObjects: {}
   materials:
     materialImportMode: 2
