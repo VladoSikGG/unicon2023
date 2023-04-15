@@ -6,18 +6,25 @@ public class Movement : MonoBehaviour
     //[SerializeField] private Joystick _joystick;
     [SerializeField] private float _moveSpeed;
     [SerializeField] private float _runSpeed;
+    [SerializeField] private float _crouchSpeed;
     [SerializeField] private float _groundDrag;
     [SerializeField] private float _jumpForce;
     [SerializeField] private float _jumpCooldown;
     private bool _readyToJump;
+    private bool _isBoost;
+    private bool _isCrouch;
 
     [Header("Keybinds")]
-    public KeyCode _jumpKey = KeyCode.Space;
+    public KeyCode jumpKey = KeyCode.Space;
+    public KeyCode crouchKey = KeyCode.LeftControl;
+    public KeyCode speedKey = KeyCode.LeftShift;
+    public KeyCode leftIncline = KeyCode.Q,
+                   rightIncline = KeyCode.E;
 
-  /*  [Header("Ground Check")]
-    [SerializeField] private float _playerHeight;
-    [SerializeField] private LayerMask _whatIsGround;
-  */
+    /*  [Header("Ground Check")]
+      [SerializeField] private float _playerHeight;
+      [SerializeField] private LayerMask _whatIsGround;
+    */
     private bool _grounded;
 
     [Header("From Player")]
@@ -64,6 +71,16 @@ public class Movement : MonoBehaviour
         {
             _rigidBody.drag = 0;
         }
+
+        if (Input.GetKeyDown(rightIncline))Incline(45);
+        if (Input.GetKeyUp(rightIncline)) Incline();
+
+        if (Input.GetKeyDown(leftIncline))Incline(-45);
+        if (Input.GetKeyUp(leftIncline))Incline();
+
+        if (Input.GetKeyDown(crouchKey)) Crouch(0.5f);
+
+        if (Input.GetKeyUp(crouchKey)) Crouch();
     }
 
     private void FixedUpdate()
@@ -81,7 +98,7 @@ public class Movement : MonoBehaviour
         
 
         // when to jump
-        if (Input.GetKey(_jumpKey) && _readyToJump && _grounded)
+        if (Input.GetKey(jumpKey) && _readyToJump && _grounded)
         {
             _readyToJump = false;
 
@@ -97,14 +114,20 @@ public class Movement : MonoBehaviour
 
         float currentSpped = _moveSpeed;
         //boost think how make that
-        if (Input.GetKey(KeyCode.LeftShift))
+        if (Input.GetKey(speedKey) && !_isCrouch)
         {
-            Debug.Log("Boost");
+            _isBoost = true;
             currentSpped = _runSpeed;
         }
-        else if (Input.GetKeyUp(KeyCode.LeftShift))
+        else if (Input.GetKey(crouchKey) && !_isBoost)
         {
-            Debug.Log("NotBoost");
+            _isCrouch = true;
+            currentSpped = _crouchSpeed;
+        }
+        else
+        {
+            _isCrouch = false;
+            _isBoost = false;
             currentSpped = _moveSpeed;
         }
 
@@ -120,11 +143,31 @@ public class Movement : MonoBehaviour
     {
         // reset y velocity
         _rigidBody.velocity = new Vector3(_rigidBody.velocity.x, 0f, _rigidBody.velocity.z);
-
         _rigidBody.AddForce(transform.up * _jumpForce, ForceMode.Impulse);
     }
     private void ResetJump()
     {
         _readyToJump = true;
+    }
+
+    public void Incline(float value)
+    {
+        transform.rotation = Quaternion.Euler(value,0,0);
+    }
+
+    public void Incline()
+    {
+        transform.rotation = Quaternion.Euler(0, 0, 0);
+    }
+
+    public void Crouch(float value)
+    {
+        transform.localScale = new Vector3(1, value, 1);
+        _rigidBody.AddForce(Vector3.up * 5);
+    }
+
+    public void Crouch()
+    {
+        transform.localScale = new Vector3(1,1,1);
     }
 }
