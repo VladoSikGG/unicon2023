@@ -21,10 +21,6 @@ public class Movement : MonoBehaviour
     public KeyCode leftIncline = KeyCode.Q,
                    rightIncline = KeyCode.E;
 
-    /*  [Header("Ground Check")]
-      [SerializeField] private float _playerHeight;
-      [SerializeField] private LayerMask _whatIsGround;
-    */
     private bool _grounded;
 
     [Header("From Player")]
@@ -33,7 +29,8 @@ public class Movement : MonoBehaviour
 
     private float _horizontalInput, _verticalInput;
     private Vector3 _moveDirection;
-    
+
+    [SerializeField] private CameraHandler _camHandler;
 
     private void Start()
     {
@@ -72,14 +69,11 @@ public class Movement : MonoBehaviour
             _rigidBody.drag = 0;
         }
 
-        if (Input.GetKeyDown(rightIncline))Incline(45);
-        if (Input.GetKeyUp(rightIncline)) Incline();
-
-        if (Input.GetKeyDown(leftIncline))Incline(-45);
-        if (Input.GetKeyUp(leftIncline))Incline();
+        if (Input.GetKeyDown(rightIncline)) _camHandler.IclineRight();
+        if (Input.GetKeyDown(leftIncline))_camHandler.IclineLeft();
+        if (Input.GetKeyUp(leftIncline) || Input.GetKeyUp(rightIncline)) _camHandler.OffIncline();
 
         if (Input.GetKeyDown(crouchKey)) Crouch(0.5f);
-
         if (Input.GetKeyUp(crouchKey)) Crouch();
     }
 
@@ -152,13 +146,13 @@ public class Movement : MonoBehaviour
 
     public void Incline(float value)
     {
-        transform.rotation = Quaternion.Euler(value,0,0);
+        _orientationInWorld.transform.rotation = Quaternion.Euler(_orientationInWorld.transform.rotation.x + value,0,0);
     }
 
-    public void Incline()
-    {
-        transform.rotation = Quaternion.Euler(0, 0, 0);
-    }
+    //public void Incline()
+    //{
+    //    transform.rotation = Quaternion.Euler(_orientationInWorld.transform.rotation.x - value, 0, 0);
+    //}
 
     public void Crouch(float value)
     {
