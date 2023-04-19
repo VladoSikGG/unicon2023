@@ -144,16 +144,6 @@ public class Movement : MonoBehaviour
         _readyToJump = true;
     }
 
-    public void Incline(float value)
-    {
-        _orientationInWorld.transform.rotation = Quaternion.Euler(_orientationInWorld.transform.rotation.x + value,0,0);
-    }
-
-    //public void Incline()
-    //{
-    //    transform.rotation = Quaternion.Euler(_orientationInWorld.transform.rotation.x - value, 0, 0);
-    //}
-
     public void Crouch(float value)
     {
         transform.localScale = new Vector3(1, value, 1);
