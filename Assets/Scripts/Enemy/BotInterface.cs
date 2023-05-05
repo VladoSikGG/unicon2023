@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -14,8 +12,11 @@ public class BotInterface : MonoBehaviour
 
     [SerializeField] private RaycastHit raycastHit;
 
-    [SerializeField] public Transform[] points;
-    [SerializeField] private int destPoint = 0;
+    [SerializeField] public Transform[] pointsForPotruling;
+    [SerializeField] private int destPoinForPotrulingt = 0;
+
+
+    [SerializeField] public Transform[] pointsForHide;
 
     public float rotationSpeed = 0.2f;
 
@@ -24,13 +25,15 @@ public class BotInterface : MonoBehaviour
 
     public bool IsRunAway;
 
+    public float HP;
+
     private void Start()
     {
         if (agent == null)
             if (!TryGetComponent(out agent))
                 print(name + " needs a navmesh agent!");
 
-        GotoNextPoint();
+        GotoNextPotrulingPoint();
     }
     private void Awake()
     {
@@ -56,54 +59,67 @@ public class BotInterface : MonoBehaviour
 
     public void RotateToTarget()
     {
-        //transform.LookAt(new Vector3(target.position.x,target.position.y+1.5f,target.position.z));
-        //smooth rotate
         var targetRotation = Quaternion.LookRotation(new Vector3(target.position.x, target.position.y + 1.5f, target.position.z) - transform.position, Vector3.up);
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed);
     }
 
-    public bool IsPointsExist()
+    public bool IsPointsForPotrulingExist()
     {
-        if (points.Length == 0)
+        if (pointsForPotruling.Length == 0)
             return false;
         return true;
     }
-    public void GotoNextPoint()
+    public void GotoNextPotrulingPoint()
     {
-        if (IsPointsExist())
+        if (IsPointsForPotrulingExist())
         {
-            EnemyWalk(points[destPoint].position);
-            destPoint = (destPoint + 1) % points.Length;
+            EnemyWalk(pointsForPotruling[destPoinForPotrulingt].position);
+            destPoinForPotrulingt = (destPoinForPotrulingt + 1) % pointsForPotruling.Length;
         }
     }
 
-    //public void EnemyRunAway()
+    public bool IsPointsForHideExist()
+    {
+        if (pointsForPotruling.Length == 0)
+            return false;
+        return true;
+    }
+    //public void GotoNextHidePoint()
     //{
-    //    IsRunAway = true;
-    //    //run away from player
-    //    //Vector3 pos = new Vector3(Random.Range(-transform.position.x -10f, transform.position.x + 10f), 0, Random.Range(-transform.position.z + 10f, transform.position.z + 10f));
-    //    //EnemyWalk(pos);
-    //    if (IsPointsExist())
+    //    if (IsPointsForPotrulingExist())
     //    {
-    //        int k = 0;
-    //        float MinDistanceBetweenEnemyAndPoint = Vector3.Distance(transform.position, points[0].position);
-    //        for (int i = 1; i < points.Length; i++)
-    //        {
-    //            float distanceBetweenEnemyAndPoint = Vector3.Distance(transform.position, points[i].position);
-    //            if (distanceBetweenEnemyAndPoint < MinDistanceBetweenEnemyAndPoint && CalculateDistanceBetweenPlayerAndPoints(i) > distanceForAttake)
-    //            {
-    //                MinDistanceBetweenEnemyAndPoint = distanceBetweenEnemyAndPoint;
-    //                k = i;
-    //            }
-    //        }
-    //        EnemyWalk(points[k].position);
+    //        EnemyWalk(pointsForPotruling[destPoinForPotrulingt].position);
+    //        destPoinForPotrulingt = (destPoinForPotrulingt + 1) % pointsForPotruling.Length;
     //    }
     //}
 
-    //public float CalculateDistanceBetweenPlayerAndPoints(int i)
-    //{
-    //    return (Vector3.Distance(transform.position, points[i].position));
-    //}
+    public void EnemyRunToNextHidePoint()
+    {
+        IsRunAway = true;
+        //run away from player
+        //Vector3 pos = new Vector3(Random.Range(-transform.position.x -10f, transform.position.x + 10f), 0, Random.Range(-transform.position.z + 10f, transform.position.z + 10f));
+        //EnemyWalk(pos);
+        if (IsPointsForHideExist())
+        {
+            int k = 0;
+            float MinDistanceBetweenEnemyAndPoint = Vector3.Distance(transform.position, pointsForHide[0].position);
+            for (int i = 1; i < pointsForHide.Length; i++)
+            {
+                float distanceBetweenEnemyAndPoint = Vector3.Distance(transform.position, pointsForHide[i].position);
+                if (distanceBetweenEnemyAndPoint < MinDistanceBetweenEnemyAndPoint && CalculateDistanceBetweenPlayerAndPoints(i) > distanceForAttake)
+                {
+                    MinDistanceBetweenEnemyAndPoint = distanceBetweenEnemyAndPoint;
+                    k = i;
+                }
+            }
+            EnemyWalk(pointsForHide[k].position);
+        }
+    }
+
+    public float CalculateDistanceBetweenPlayerAndPoints(int i)
+    {
+        return (Vector3.Distance(transform.position, pointsForHide[i].position));
+    }
 
 
     public void ResetIsRunAway()
@@ -125,5 +141,12 @@ public class BotInterface : MonoBehaviour
     public void EnemyDie()
     {
         Destroy(gameObject);
+    }
+    public void EnemyTakeDamage(float damage)
+    {
+        HP-= damage;
+        EnemyRunToNextHidePoint();
+        if(HP<=0)
+            EnemyDie();
     }
 }

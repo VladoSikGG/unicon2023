@@ -44,6 +44,12 @@ public class Shooting : MonoBehaviour
                 GameObject hitHole = Instantiate(_bulletHole, hit.point + (hit.normal * 0.025f), Quaternion.FromToRotation(Vector3.up, hit.normal));
                 Debug.Log("Fire " + hit.transform.name);
                 Destroy(hitHole, 30f);
+
+                if(hit.transform.tag=="Enemy")
+                {
+                    BotInterface botInterface = new BotInterface();
+                    botInterface.EnemyTakeDamage(Random.Range(1,3));
+                }
             }
             _ammo--;
             _smokeFX.Play();
