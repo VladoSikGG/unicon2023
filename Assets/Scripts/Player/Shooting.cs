@@ -53,7 +53,7 @@ public class Shooting : MonoBehaviour
             }
             _ammo--;
             _smokeFX.Play();
-            _anim.Play();
+            _anim.Play("Fire");
             _canFire = false;
             StartCoroutine("FireDelay");
         }
@@ -67,6 +67,7 @@ public class Shooting : MonoBehaviour
 
     public void Reloading()
     {
+        _anim.Play("Reload");
         _ammo = ONE_CYCLE;
     }
 }

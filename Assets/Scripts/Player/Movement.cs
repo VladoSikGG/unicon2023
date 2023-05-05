@@ -69,8 +69,8 @@ public class Movement : MonoBehaviour
             _rigidBody.drag = 0;
         }
 
-        if (Input.GetKeyDown(rightIncline)) _camHandler.IclineRight();
-        if (Input.GetKeyDown(leftIncline))_camHandler.IclineLeft();
+        if (Input.GetKeyDown(rightIncline)) _camHandler.InclineRight();
+        if (Input.GetKeyDown(leftIncline))_camHandler.InclineLeft();
         if (Input.GetKeyUp(leftIncline) || Input.GetKeyUp(rightIncline)) _camHandler.OffIncline();
 
         if (Input.GetKeyDown(crouchKey)) Crouch(0.5f);
@@ -108,7 +108,7 @@ public class Movement : MonoBehaviour
 
         float currentSpped = _moveSpeed;
         //boost think how make that
-        if (Input.GetKey(speedKey) && !_isCrouch)
+        if (Input.GetKey(speedKey) && !_isCrouch && !_camHandler.isIncline)
         {
             _isBoost = true;
             currentSpped = _runSpeed;
