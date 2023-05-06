@@ -6,12 +6,6 @@ using static UnityEngine.GraphicsBuffer;
 
 public class BotController : BotInterface
 {
-    private Animation _anim;
-
-    private void Start()
-    {
-        _anim = GetComponent<Animation>();
-    }
     private void Update()
     {
         float dis = Vector3.Distance(target.position, transform.position);
@@ -36,7 +30,6 @@ public class BotController : BotInterface
         {
             RotateToTarget();
             EnemyAttack();
-            _anim.Play("Firing Rifle");
         }
 
         Vector3 forward = transform.TransformDirection(Vector3.forward) * 10;

@@ -303,6 +303,7 @@ MonoBehaviour:
   - {fileID: 3352716559557457031}
   - {fileID: 3745622627877590676}
   destPoint: 0
+  _anim: {fileID: 0}
   rotationSpeed: 0.2
   IsRunAway: 0
 --- !u!195 &137748026
@@ -620,6 +621,7 @@ MonoBehaviour:
   - {fileID: 3352716559557457031}
   - {fileID: 3745622627877590676}
   destPoint: 0
+  _anim: {fileID: 0}
   rotationSpeed: 0.2
   IsRunAway: 0
 --- !u!1 &649423031
@@ -1723,6 +1725,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 64b8a78fa3e4b45ed90346e71d6a1c1c, type: 3}
       propertyPath: m_Name
       value: N3_FIXED@Rifle Walk-2
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 64b8a78fa3e4b45ed90346e71d6a1c1c, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
       objectReference: {fileID: 0}
     - target: {fileID: 1330755669629619180, guid: 64b8a78fa3e4b45ed90346e71d6a1c1c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

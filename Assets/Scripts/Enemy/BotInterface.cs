@@ -17,6 +17,10 @@ public class BotInterface : MonoBehaviour
     [SerializeField] public Transform[] points;
     [SerializeField] private int destPoint = 0;
 
+    private int _health = 100;
+
+    public Animation _anim;
+
     public float rotationSpeed = 0.2f;
 
     private float spawnRate = 2f;
@@ -26,6 +30,8 @@ public class BotInterface : MonoBehaviour
 
     private void Start()
     {
+        _anim = GetComponent<Animation>();
+
         if (agent == null)
             if (!TryGetComponent(out agent))
                 print(name + " needs a navmesh agent!");
@@ -114,16 +120,26 @@ public class BotInterface : MonoBehaviour
     public void EnemyAttack()
     {
         agent.Stop();
-
         // method when Enemy ready give damage to Player with reload attake
         if (Time.time > nextSpawn)
         {
+            _anim.Play("Firing Rifle");
             nextSpawn = Time.time + spawnRate;
         }
     }
 
     public void EnemyDie()
     {
-        Destroy(gameObject);
+        _anim.Play("Death From The Front");
+        GetComponent<BotController>().enabled = false;
+        agent.enabled = false;
+        Destroy(gameObject, 60f);
+    }
+
+    public void Damage(int value)
+    {
+        _health -= value;
+        if (_health <= 0)
+            EnemyDie();
     }
 }

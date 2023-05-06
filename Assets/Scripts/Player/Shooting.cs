@@ -45,8 +45,10 @@ public class Shooting : MonoBehaviour
                 if (hit.collider.tag == "Enemy")
                 {
                     Debug.Log("Hit Enemy");
+                    BotController controller = hit.collider.GetComponent<BotController>();
                     Instantiate(_hitEnemy, hit.point, Quaternion.identity);
-                    hit.collider.GetComponent<BotController>().EnemyRunAway();
+                    controller.EnemyRunAway();
+                    controller.Damage(10);
                 }
                 else
                 {
