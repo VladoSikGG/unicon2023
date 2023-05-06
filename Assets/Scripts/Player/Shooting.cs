@@ -19,6 +19,7 @@ public class Shooting : MonoBehaviour
 
     [SerializeField] private bool _canFire;
     [SerializeField] private KeyCode _reloadKey;
+    [SerializeField] private ParticleSystem _hitEnemy;
 
     private void Update()
     {
@@ -41,9 +42,18 @@ public class Shooting : MonoBehaviour
             RaycastHit hit;
             if (Physics.Raycast(_camera.transform.position, _camera.transform.forward, out hit, _range))
             {
-                GameObject hitHole = Instantiate(_bulletHole, hit.point + (hit.normal * 0.025f), Quaternion.FromToRotation(Vector3.up, hit.normal));
-                Debug.Log("Fire " + hit.transform.name);
-                Destroy(hitHole, 30f);
+                if (hit.collider.tag == "Enemy")
+                {
+                    Debug.Log("Hit Enemy");
+                    Instantiate(_hitEnemy, hit.point, Quaternion.identity);
+                }
+                else
+                {
+                    GameObject hitHole = Instantiate(_bulletHole, hit.point + (hit.normal * 0.025f), Quaternion.FromToRotation(Vector3.up, hit.normal));
+                    Debug.Log("Fire " + hit.transform.name);
+                    Destroy(hitHole, 20f);
+                }
+                
             }
             _ammo--;
             _smokeFX.Play();
