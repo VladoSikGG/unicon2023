@@ -46,6 +46,7 @@ public class Shooting : MonoBehaviour
                 {
                     Debug.Log("Hit Enemy");
                     Instantiate(_hitEnemy, hit.point, Quaternion.identity);
+                    hit.collider.GetComponent<BotController>().EnemyRunAway();
                 }
                 else
                 {

@@ -77,33 +77,33 @@ public class BotInterface : MonoBehaviour
         }
     }
 
-    //public void EnemyRunAway()
-    //{
-    //    IsRunAway = true;
-    //    //run away from player
-    //    //Vector3 pos = new Vector3(Random.Range(-transform.position.x -10f, transform.position.x + 10f), 0, Random.Range(-transform.position.z + 10f, transform.position.z + 10f));
-    //    //EnemyWalk(pos);
-    //    if (IsPointsExist())
-    //    {
-    //        int k = 0;
-    //        float MinDistanceBetweenEnemyAndPoint = Vector3.Distance(transform.position, points[0].position);
-    //        for (int i = 1; i < points.Length; i++)
-    //        {
-    //            float distanceBetweenEnemyAndPoint = Vector3.Distance(transform.position, points[i].position);
-    //            if (distanceBetweenEnemyAndPoint < MinDistanceBetweenEnemyAndPoint && CalculateDistanceBetweenPlayerAndPoints(i) > distanceForAttake)
-    //            {
-    //                MinDistanceBetweenEnemyAndPoint = distanceBetweenEnemyAndPoint;
-    //                k = i;
-    //            }
-    //        }
-    //        EnemyWalk(points[k].position);
-    //    }
-    //}
+    public void EnemyRunAway()
+    {
+        IsRunAway = true;
+        //run away from player
+        //Vector3 pos = new Vector3(Random.Range(-transform.position.x -10f, transform.position.x + 10f), 0, Random.Range(-transform.position.z + 10f, transform.position.z + 10f));
+        //EnemyWalk(pos);
+        if (IsPointsExist())
+        {
+            int k = 0;
+            float MinDistanceBetweenEnemyAndPoint = Vector3.Distance(transform.position, points[0].position);
+            for (int i = 1; i < points.Length; i++)
+            {
+                float distanceBetweenEnemyAndPoint = Vector3.Distance(transform.position, points[i].position);
+                if (distanceBetweenEnemyAndPoint < MinDistanceBetweenEnemyAndPoint && CalculateDistanceBetweenPlayerAndPoints(i) > distanceForAttake)
+                {
+                    MinDistanceBetweenEnemyAndPoint = distanceBetweenEnemyAndPoint;
+                    k = i;
+                }
+            }
+            EnemyWalk(points[k].position);
+        }
+    }
 
-    //public float CalculateDistanceBetweenPlayerAndPoints(int i)
-    //{
-    //    return (Vector3.Distance(transform.position, points[i].position));
-    //}
+    public float CalculateDistanceBetweenPlayerAndPoints(int i)
+    {
+        return (Vector3.Distance(transform.position, points[i].position));
+    }
 
 
     public void ResetIsRunAway()
