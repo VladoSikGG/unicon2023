@@ -26,9 +26,11 @@ public class BotInterface : MonoBehaviour
     public bool IsRunAway;
 
     public float HP;
+    private Animation _anim;
 
     private void Start()
     {
+        _anim = GetComponent<Animation>();
         if (agent == null)
             if (!TryGetComponent(out agent))
                 print(name + " needs a navmesh agent!");
@@ -59,6 +61,7 @@ public class BotInterface : MonoBehaviour
 
     public void RotateToTarget()
     {
+        _anim.Play("Idle Aiming");
         var targetRotation = Quaternion.LookRotation(new Vector3(target.position.x, target.position.y + 1.5f, target.position.z) - transform.position, Vector3.up);
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed);
     }
@@ -73,6 +76,7 @@ public class BotInterface : MonoBehaviour
     {
         if (IsPointsForPotrulingExist())
         {
+            _anim.Play("Rifle Walk");
             EnemyWalk(pointsForPotruling[destPoinForPotrulingt].position);
             destPoinForPotrulingt = (destPoinForPotrulingt + 1) % pointsForPotruling.Length;
         }
@@ -112,6 +116,7 @@ public class BotInterface : MonoBehaviour
                     k = i;
                 }
             }
+            _anim.Play("Sprint Forward");
             EnemyWalk(pointsForHide[k].position);
         }
     }
@@ -129,18 +134,22 @@ public class BotInterface : MonoBehaviour
 
     public void EnemyAttack()
     {
-        agent.Stop();
-
+        agent.Stop(); 
         // method when Enemy ready give damage to Player with reload attake
         if (Time.time > nextSpawn)
         {
+            _anim.Play("Firing Rifle");
             nextSpawn = Time.time + spawnRate;
         }
     }
 
     public void EnemyDie()
     {
-        Destroy(gameObject);
+        Destroy(gameObject, 60);
+        _anim.Play("Death From The Front");
+        agent.enabled = false;
+        GetComponent<BotController>().enabled = false;
+        GetComponent<Collider>().enabled = false;
     }
     public void EnemyTakeDamage(float damage)
     {

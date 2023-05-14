@@ -20,6 +20,8 @@ public class Shooting : MonoBehaviour
     [SerializeField] private bool _canFire;
     [SerializeField] private KeyCode _reloadKey;
 
+    [SerializeField] private ParticleSystem _hitEnemy;
+
     private void Update()
     {
         if (Input.GetMouseButton(0) && _canFire)
@@ -41,14 +43,18 @@ public class Shooting : MonoBehaviour
             RaycastHit hit;
             if (Physics.Raycast(_camera.transform.position, _camera.transform.forward, out hit, _range))
             {
-                GameObject hitHole = Instantiate(_bulletHole, hit.point + (hit.normal * 0.025f), Quaternion.FromToRotation(Vector3.up, hit.normal));
-                Debug.Log("Fire " + hit.transform.name);
-                Destroy(hitHole, 30f);
+                
 
                 if(hit.transform.tag=="Enemy")
                 {
-                    BotInterface botInterface = new BotInterface();
-                    botInterface.EnemyTakeDamage(Random.Range(1,3));
+                    hit.transform.GetComponent<BotController>().EnemyTakeDamage(Random.Range(1,6));
+                    Instantiate(_hitEnemy, hit.point, Quaternion.identity);
+                }
+                else
+                {
+                    GameObject hitHole = Instantiate(_bulletHole, hit.point + (hit.normal * 0.025f), Quaternion.FromToRotation(Vector3.up, hit.normal));
+                    Debug.Log("Fire " + hit.transform.name);
+                    Destroy(hitHole, 30f);
                 }
             }
             _ammo--;
